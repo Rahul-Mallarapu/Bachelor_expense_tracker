@@ -1,267 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bachelor Expense Tracker - React</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Bachelor Expense Tracker</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #e0f7fa;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
 
-  <style>
-    * { box-sizing: border-box; }
-    body
-    { 
-        margin:0;
-        padding:0;
-        background-color:#e0f7fa;
-        font-family:Arial,sans-serif;
-        overflow-x:hidden;
-    }
-    .navbar
-    { 
-        background-color:#00796b;
-        color:white;
-        padding:10px 20px;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-    }
-    .message-up
-    { 
-        font-size:22px;
-        font-weight:bold;
-        color:white;
-    }
-    .image-view
-    {
-        width:70px;
-        height:70px;
-        border-radius:50%;
-        object-fit:cover;
-    }
-    .form
-    { 
-        display:flex;
-        gap:10px;
-    }
-    .userid, .PIN
-    { 
-        padding:5px;
-        border:2px solid black;
-        border-radius:5px;
-        height:30px;
-        font-size:16px;
-    }
-    #btn
-    {
-        background-color: rgb(71,71,138);
-        color:white;
-        padding:6px 12px;
-        border:none;
-        border-radius:4px;
-        cursor:pointer;
-        font-size:16px;
-    }
-    .account-overview
-    { 
-        position:absolute;
-        top:120px;
-        left:30px;
-        display:flex;
-        flex-direction:column;
-        align-items:flex-start;
-    }
-    .balance-text
-    { 
-        font-size:24px;
-        font-weight:bold;
-        color:#333;
-        margin-bottom:5px;
-    }
-    .balance-amount
-    { 
-        font-size:40px;
-        color:#00796b;
-        font-weight:bold;
-    }
-    .metrics-display
-    {
-        position:absolute;
-        top:300px;
-        left:30px;
-        background-color:#ffffffcc;
-        border:1px solid #ccc;
-        border-radius:8px;
-        padding:15px;
-        width:280px;
-        box-shadow:0 2px 5px rgba(0,0,0,0.1);
-    }
-    .metrics-display h2
-    { 
-        margin-top:0;
-        font-size:18px;
-        color:#00796b;
-        border-bottom:1px solid #eee;
-        padding-bottom:5px;
-        margin-bottom:10px;
-    }
-    .metrics-display p
-    { 
-        font-size:16px;
-        margin-bottom:8px;
-        color:#555;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-    }
-    .metrics-display p span
-    { 
-        font-weight:bold;
-        color:#333;
-    }
-    .timer
-    { 
-        position:fixed;
-        bottom:10px;
-        left:50%;
-        transform:translateX(-50%);
-        font-size:26px;
-        color:#333;
-        background-color:#ffffffcc;
-        padding:8px 20px;
-        border-radius:10px;
-        box-shadow:0 0 5px rgba(0,0,0,0.2);
-        z-index:1000;
+        .navbar {
+            background-color: #00796b;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .message-up {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .image-view {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%; 
+            object-fit: cover;
+        }
+
+        .form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .userid, .PIN {
+            padding: 5px;
+            border: 2px solid black;
+            border-radius: 5px;
+            height: 30px;
+            font-size: 16px;
+        }
+
+        #btn {
+            background-color: rgb(71, 71, 138);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .account-overview {
+            position: absolute;
+            top: 120px;
+            left: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size:12px;
+        }
+
+        .balance-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 40px;
+            color: #00796b;
+            font-weight: bold;
+        }
+
+        .metrics-display {
+        position: absolute;
+        top: 300px;
+        left: 30px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 10px;
+        background-color: #ffffffcc;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 15px;
+        width: 200px;
+        height: 200px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        overflow: hidden;
     }
 
-    .transactions-box
-    { 
-        position:absolute;
-        top:120px;
-        left:50%;
-        transform:translateX(-50%);
-        width:500px;
-        max-height:400px;
-        overflow-y:auto;
-        background-color:#ffffffcc;
-        border:3px solid black;
-        border-radius:10px;
-        padding:15px;
-        text-align:center;
-        box-shadow:0 4px 8px rgba(0,0,0,0.2);
-    }
-    .transactions-box h2
-    { 
-        margin-top:0;
-        color:#00796b;
-    }
-    .transaction-item
-    { 
-        display:flex;
-        justify-content:space-between;
-        font-size:14px;
-        padding:8px 0;
-        border-bottom:1px solid #eee;
-        color:#444;
-    }
-    .transaction-item:last-child
-    {
-        border-bottom:none;
+    .metrics-display h2 {
+        margin: 0;
+        font-size: 18px;
+        color: #00796b;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
     }
 
-    .right-stack
-    { 
-        position:absolute;
-        top:120px;
-        right:20px;
-        display:flex;
-        flex-direction:column;
-        gap:25px;
-    }
-    .transfer-box, .loan-box
-    { 
-        background-color:#ffffffcc;
-        padding:15px;
-        border:2px solid black;
-        border-radius:10px;
-        width:300px;
-        box-shadow:0 2px 5px rgba(0,0,0,0.1);
-    }
-    .box-title
-    { 
-        font-weight:bold;
-        margin-bottom:12px;
-        font-size:18px;
-        color:#00796b;
-        text-align:center;
-    }
-    .transfer-box input, .loan-box input
-    { 
-        width:100%;
-        margin-bottom:10px;
-        height:35px;
-        font-size:15px;
-        padding-left:10px;
-        border:1px solid #ccc;
-        border-radius:4px;
-    }
-    .transfer-box button, .loan-box button
-    { 
-        background-color: rgb(71,71,138);
-        color:white;
-        padding:8px 15px;
-        border:none;
-        border-radius:4px;
-        cursor:pointer;
-        font-size:16px;
-        width:100%;
-        transition:background-color 0.2s ease;
-    }
-    .transfer-box button:hover, .loan-box button:hover
-    { 
-        background-color: rgb(50,50,100);
+    .metrics-display p {
+        font-size: 14px;
+        color: #555;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0;
     }
 
-    .circular-meter
-    { 
-        width:150px;
-        height:150px;
-        border-radius:50%;
-        background:lightgray;
-        position:relative;
-        margin:auto;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    .metrics-display p span {
+        font-weight: bold;
+        color: #333;
     }
-    .inside-circle
-    { 
-        position:absolute;
-        width:90px;
-        height:90px;
-        background-color:white;
-        border-radius:50%;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-weight:bold;
-        font-size:18px;
-        color:#333;
-    }
-    .meter-label
-    { 
-        text-align:center;
-        font-size:16px;
-        margin-top:5px;
-        font-weight:bold;
-        color:#333;
-    }
-  </style>
+
+        .timer {
+            position: fixed;
+            border:2px solid red;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 15px;
+            color: #333;
+            background-color: #ffffffcc;
+            padding: 8px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            z-index: 1000; 
+        }
+
+        .transactions-box {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #ffffffcc;
+            border: 3px solid black;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .transactions-box h2 {
+            margin-top: 0;
+            color: #00796b;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            color: #444;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .right-stack {
+            position: absolute;
+            top: 120px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+         .loan-box {
+            background-color: #ffffffcc;
+            position:relative;
+            bottom:27px;
+            font-size:10px;
+            text-align:center;
+            padding: 5px;
+            border: 5px solid black;
+            border-radius: 10px;
+            width: 200px;
+            min-height: 10px;
+            height: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .transfer-box {
+            background-color: #ffffffcc;
+            position:relative;
+            bottom:27px;
+            text-align:center;
+            padding: 5px;
+            border: 5px solid black;
+            border-radius: 10px;
+            width: 200px;
+            min-height: 10px;
+            height: auto;
+            bottom:45px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .box-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 18px;
+            color: #00796b;
+            text-align: center;
+        }
+
+        .transfer-box input, .loan-box input {
+            width: 100%;
+            margin-bottom: 10px;
+            height: 35px; 
+            font-size: 15px;
+            padding-left: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .transfer-box button, .loan-box button {
+        width: 100%;
+        background-color: rgb(71, 71, 138);
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        }
+
+        .transfer-box button:hover, .loan-box button:hover {
+            background-color: rgb(50, 50, 100);
+        }
+
+        .circular-meter1 {
+            width: 100px;
+            height: 100px;
+            position:relative;
+            right:75px;
+            bottom:65px;
+            border-radius: 50%;
+            background: lightgray;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .circular-meter2 {
+            width: 100px;
+            height: 100px;
+            position:relative;
+            bottom:240px;
+            left:65px;
+            bottom:254px;
+            border-radius: 50%;
+            background: lightgray;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .savings-meter {
+        }
+
+        .spending-meter {
+        }
+
+        .inside-circle {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+        .meter-label1 {
+            position:relative;
+            right:75px;
+            bottom:90px;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .meter-label2 {
+            position:absolute;
+            left:131px;
+            bottom:195px;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .input-fields {
+            text-align:center;
+        }
+    </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-  <script type="text/babel" src="script.js"></script>
+
+    <div class="navbar">
+        <p class="message-up">Please Login to your Account</p>
+        <img src="https://cdn1.iconfinder.com/data/icons/male-profession-colour-flat/1063/24-512.png" alt="profile" class="image-view" />
+        <form class="form">
+            <input type="text" class="userid" placeholder="User ID">
+            <input type="password" class="PIN" placeholder="PIN"> <button id="btn">=></button>
+        </form>
+    </div>
+
+    <main>
+        <div class="account-overview">
+            <p class="balance-text"><strong>Current Balance</strong><br><em></em></p>
+            <p class="balance-amount"></p>
+        </div>
+
+        <div class="metrics-display">
+            <h2>Your Spending Overview</h2>
+            <p>Daily Spending Limit: <span class="daily-limit-display">₹0</span></p>
+            <p>Daily Spent Today: <span class="daily-spent-display">₹0</span></p>
+            <p>Total Expenses: <span class="total-expenses-display">₹0</span></p>
+            <p>Remaining Potential Savings: <span class="total-savings-display">₹0</span></p>
+        </div>
+
+        <div id="analyticsChoiceBox" style="display:none; position:absolute; top:520px; left:30px; background:#ffffffcc; border:1px solid #ccc; border-radius:8px; padding:15px; width:200px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+            <p style="font-weight:bold; color:#00796b; margin:0 0 10px 0; font-size:13px;">📊 Spending Analytics</p>
+            <button id="choice1Btn" style="width:100%; margin-bottom:8px; padding:7px; background:rgb(71,71,138); color:white; border:none; border-radius:4px; cursor:pointer; font-size:11px;">View Analysis on Balance Completion</button>
+            <button id="choice2Btn" style="width:100%; padding:7px; background:rgb(71,71,138); color:white; border:none; border-radius:4px; cursor:pointer; font-size:11px;">View Analytics After Each Transaction</button>
+             <p id="scrollHintText" style="display:none; margin:8px 0 0 0; font-size:11px; color:#e65100; text-align:center;">⬇️ Please scroll down to see transaction-wise analysis</p>
+        </div>
+
+        <div id="choice2AnalyticsBox" style="display:none; position:absolute; top:740px; left:30px; background:#ffffffcc; border:1px solid #ccc; border-radius:8px; padding:10px; width:320px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+            <p style="font-weight:bold; color:#00796b; margin:0 0 8px 0; font-size:13px;">Cluster Analysis</p>
+            <canvas id="analyticsCanvas2" width="295" height="320"></canvas>
+        </div>
+
+        <canvas id="analyticsCanvas1" width="470" height="370"
+            style="display:none; position:absolute; top:120px; left:50%; transform:translateX(-50%);
+            background:#ffffffcc; border:3px solid black; border-radius:10px;">
+        </canvas>
+
+        <div class="transactions-box" id="transactionsBox">
+            <h2>Daily Transactions</h2>
+            <p>No transactions yet.</p>
+        </div>
+
+        <div class="right-stack">
+            <div class="loan-box">
+                <p class="box-title">Request Loan</p>
+                <input type="text" class = "input-fields" placeholder="Loan User ID">
+                <input type="text" class = "input-fields" placeholder="Purpose">
+                <input type="text" class = "input-fields" placeholder="Amount to Request">
+                <button>Request Loan</button>
+            </div>
+
+            <div class="transfer-box">
+                <p class="box-title">Transfer Money</p>
+                <input type="text" class = "input-fields" placeholder="Recipient User ID">
+                <input type="text" class = "input-fields" placeholder="Purpose">
+                <input type="text" class = "input-fields" placeholder="Amount to Transfer">
+                <button>Transfer Amount</button>
+            </div>
+
+            <div class="circular-meter1 savings-meter">
+                <div class="inside-circle" id="savingsPercent">0%</div> 
+            </div>
+            <p class="meter-label1">Monthly Savings</p>
+
+            <div class="circular-meter2 spending-meter">
+                <div class="inside-circle" id="spendingPercent">0%</div> 
+            </div>
+            <p class="meter-label2">Monthly Expenses</p>
+        </div>
+    </main>
+
+    <div class="timer">You will be logged out in 05:00</div>
+
+    <script src="script.js"></script>
 </body>
 </html>
