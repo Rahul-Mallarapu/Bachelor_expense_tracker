@@ -396,7 +396,7 @@ async function runAnalytics(mode) {
     }
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/analyze', {
+        const response = await fetch('https://expense-tracker-backend-ewar.onrender.com/analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ transactions: transferData })
